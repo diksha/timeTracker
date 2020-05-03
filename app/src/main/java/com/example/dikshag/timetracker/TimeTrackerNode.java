@@ -2,17 +2,22 @@ package com.example.dikshag.timetracker;
 
 import android.util.Log;
 
+import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-public class TimeTrackerNode {
+public class TimeTrackerNode implements Serializable {
     String name;
     boolean start;
     long localTime;
     long startLocalTime;
     int height;
     List<TimeTrackerNode> children = new ArrayList<>();
+    Map<LocalDate, Long> dateToTime = new HashMap<>();
 
     TimeTrackerNode(TimeTrackerNode parent, String name) {
         this.name = name;
@@ -38,6 +43,12 @@ public class TimeTrackerNode {
             localTime += System.currentTimeMillis() - startLocalTime;
             //Store this somewhere;
             start = false;
+        }
+        LocalDate date = LocalDate.now();
+        if(dateToTime.containsKey(date)) {
+            dateToTime.put(date, dateToTime.get(date) + localTime);
+        } else {
+            dateToTime.put(date, localTime);
         }
         localTime = 0;
     }
@@ -79,7 +90,7 @@ public class TimeTrackerNode {
     private long dfsUtil(TimeTrackerNode rootTimeTrackerNode) {
         long timeReturned = 0;
         for (TimeTrackerNode timeTrackerNode : rootTimeTrackerNode.getChildren()) {
-             timeReturned = dfsUtil(timeTrackerNode);
+            timeReturned = dfsUtil(timeTrackerNode);
         }
         return rootTimeTrackerNode.localTime + timeReturned;
     }
