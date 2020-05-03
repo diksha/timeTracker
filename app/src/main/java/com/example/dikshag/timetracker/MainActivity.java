@@ -1,13 +1,17 @@
 package com.example.dikshag.timetracker;
 
+import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.widget.Button;
+import android.util.Log;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private TimeTrackerAdapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private TimeTrackerNode rootTimeTrackerNode;
+    private List<TimeTrackerNode> timeTrackerNodes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,13 +36,43 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(mAdapter);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (timeTrackerNodes != null) {
+            try {
+                FileOutputStream file = getApplicationContext().openFileOutput("someFile",
+                        Context.MODE_PRIVATE);
+                ObjectOutputStream out = new ObjectOutputStream
+                        (file);
+                out.writeObject(timeTrackerNodes.get(0));
+                out.flush();
+                out.close();
+
+            } catch (Exception e) {
+                Log.e("dikshag", "Exception found");
+            }
+        }
+
+    }
+
+    public boolean fileExists(Context context, String filename) {
+        File file = context.getFileStreamPath(filename);
+        if (file == null || !file.exists()) {
+            return false;
+        }
+        return true;
+    }
+
     private List<TimeTrackerNode> getTimeTrackerRecords() {
         List<TimeTrackerNode> timeTrackerNodes = new ArrayList<>();
         dfsUtil(timeTrackerNodes, rootTimeTrackerNode);
+        this.timeTrackerNodes = timeTrackerNodes;
         return timeTrackerNodes;
     }
 
-    private void dfsUtil(List<TimeTrackerNode> timeTrackerNodes, TimeTrackerNode rootTimeTrackerNode) {
+    private void dfsUtil(List<TimeTrackerNode> timeTrackerNodes, TimeTrackerNode
+            rootTimeTrackerNode) {
         timeTrackerNodes.add(rootTimeTrackerNode);
         for (TimeTrackerNode timeTrackerNode : rootTimeTrackerNode.getChildren()) {
             dfsUtil(timeTrackerNodes, timeTrackerNode);
@@ -46,7 +81,17 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void init() {
-        rootTimeTrackerNode = new TimeTrackerNode(null, "");
+        if (fileExists(getApplicationContext(), "someFile")) {
+            try {
+                FileInputStream fis = getApplicationContext().openFileInput("someFile");
+                ObjectInputStream is = new ObjectInputStream(fis);
+                rootTimeTrackerNode = (TimeTrackerNode) is.readObject();
+            } catch (Exception e) {
+                Log.i("dikshag", "File not found with exception " + e);
+            }
+        } else {
+            rootTimeTrackerNode = new TimeTrackerNode(null, "");
+        }
     }
 
 
