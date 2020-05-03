@@ -1,6 +1,7 @@
 package com.example.dikshag.timetracker;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -73,8 +74,10 @@ public class TimeTrackerAdapter extends RecyclerView.Adapter<TimeTrackerAdapter.
                 timeButtonsView.addView(textView);
 
                 Button startButton = new Button(context);
-                startButton.setTextSize(10);
+                startButton.setTextSize(12);
                 startButton.setText("Start");
+                startButton.setBackgroundColor(0x000000);
+                startButton.setTextColor(Color.BLUE);
                 startButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -87,8 +90,10 @@ public class TimeTrackerAdapter extends RecyclerView.Adapter<TimeTrackerAdapter.
                 startButton.setLayoutParams(params);
                 timeButtonsView.addView(startButton);
                 Button pauseButton = new Button(context);
-                pauseButton.setTextSize(10);
+                pauseButton.setTextSize(12);
                 pauseButton.setText("Pause");
+                pauseButton.setBackgroundColor(0x000000);
+                pauseButton.setTextColor(Color.BLUE);
                 pauseButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -104,7 +109,9 @@ public class TimeTrackerAdapter extends RecyclerView.Adapter<TimeTrackerAdapter.
                 timeButtonsView.addView(pauseButton);
                 Button stopButton = new Button(context);
                 stopButton.setText("Stop");
-                stopButton.setTextSize(10);
+                stopButton.setTextSize(12);
+                stopButton.setBackgroundColor(0x000000);
+                stopButton.setTextColor(Color.BLUE);
                 stopButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
