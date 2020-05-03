@@ -39,6 +39,9 @@ public class TimeTrackerNode implements Serializable {
     }
 
     public void stop() {
+        for (TimeTrackerNode timeTrackerNode : this.getChildren()) {
+            timeTrackerNode.stop();
+        }
         if (start == true) {
             localTime += System.currentTimeMillis() - startLocalTime;
             //Store this somewhere;
