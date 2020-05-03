@@ -11,13 +11,13 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class TimeTrackerNode implements Serializable {
-    String name;
-    boolean start;
-    long localTime;
-    long startLocalTime;
-    int height;
-    List<TimeTrackerNode> children = new ArrayList<>();
-    Map<LocalDate, Long> dateToTime = new HashMap<>();
+    private String name;
+    private boolean start;
+    private long localTime;
+    private long startLocalTime;
+    private int height;
+    private List<TimeTrackerNode> children = new ArrayList<>();
+    private Map<LocalDate, Long> dateToTime = new HashMap<>();
 
     TimeTrackerNode(TimeTrackerNode parent, String name) {
         this.name = name;
