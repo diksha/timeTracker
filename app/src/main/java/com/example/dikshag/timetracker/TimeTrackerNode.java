@@ -71,7 +71,7 @@ public class TimeTrackerNode implements Serializable {
 
     public String getDuration() {
         long totalTimeInMillis = dfsUtil(this);
-        Log.i("dikshag", totalTimeInMillis + "time");
+        Log.i("TimeTracker", totalTimeInMillis + "time");
         if (totalTimeInMillis < 0) {
             throw new IllegalArgumentException("Duration must be greater than zero!");
         }
