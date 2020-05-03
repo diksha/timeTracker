@@ -1,7 +1,10 @@
 package com.example.dikshag.timetracker;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class TimeTrackerNode {
     String name;
@@ -34,9 +37,9 @@ public class TimeTrackerNode {
         if (start == true) {
             localTime += System.currentTimeMillis() - startLocalTime;
             //Store this somewhere;
-            localTime = 0;
             start = false;
         }
+        localTime = 0;
     }
 
     public int getHeight() {
@@ -53,5 +56,31 @@ public class TimeTrackerNode {
 
     public String getName() {
         return name;
+    }
+
+    public String getDuration() {
+        long totalTimeInMillis = dfsUtil(this);
+        Log.i("dikshag", totalTimeInMillis + "time");
+        if (totalTimeInMillis < 0) {
+            throw new IllegalArgumentException("Duration must be greater than zero!");
+        }
+
+        long days = TimeUnit.MILLISECONDS.toDays(totalTimeInMillis);
+        totalTimeInMillis -= TimeUnit.DAYS.toMillis(days);
+        long hours = TimeUnit.MILLISECONDS.toHours(totalTimeInMillis);
+        totalTimeInMillis -= TimeUnit.HOURS.toMillis(hours);
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(totalTimeInMillis);
+        totalTimeInMillis -= TimeUnit.MINUTES.toMillis(minutes);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(totalTimeInMillis);
+
+        return days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+    }
+
+    private long dfsUtil(TimeTrackerNode rootTimeTrackerNode) {
+        long timeReturned = 0;
+        for (TimeTrackerNode timeTrackerNode : rootTimeTrackerNode.getChildren()) {
+             timeReturned = dfsUtil(timeTrackerNode);
+        }
+        return rootTimeTrackerNode.localTime + timeReturned;
     }
 }

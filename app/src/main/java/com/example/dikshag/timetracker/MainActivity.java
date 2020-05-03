@@ -14,31 +14,21 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private TimeTrackerAdapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private TimeTrackerNode rootTimeTrackerNode;
-    private Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         recyclerView = findViewById(R.id.time_tracker_nodes);
-        button = findViewById(R.id.add_button);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         init();
         // specify an adapter (see also next example)
         mAdapter = new TimeTrackerAdapter(getTimeTrackerRecords());
         recyclerView.setAdapter(mAdapter);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DialogFragment createNewFragment = new CreateNewDialogFragment();
-                createNewFragment.show(getSupportFragmentManager(), "createNewDialog");
-            }
-        });
-
     }
 
     private List<TimeTrackerNode> getTimeTrackerRecords() {
@@ -57,8 +47,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void init() {
         rootTimeTrackerNode = new TimeTrackerNode(null, "");
-        rootTimeTrackerNode.addChild(new TimeTrackerNode(rootTimeTrackerNode, "Work"));
     }
 
 
+    public void notifyDataSetChanged() {
+        mAdapter.dataSetChanged(getTimeTrackerRecords());
+        mAdapter.notifyDataSetChanged();
+    }
 }
