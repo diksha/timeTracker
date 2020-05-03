@@ -90,7 +90,7 @@ public class TimeTrackerNode implements Serializable {
     private long dfsUtil(TimeTrackerNode rootTimeTrackerNode) {
         long timeReturned = 0;
         for (TimeTrackerNode timeTrackerNode : rootTimeTrackerNode.getChildren()) {
-            timeReturned = dfsUtil(timeTrackerNode);
+            timeReturned += dfsUtil(timeTrackerNode);
         }
         return rootTimeTrackerNode.localTime + timeReturned;
     }

@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         if (timeTrackerNodes != null) {
             try {
-                for(TimeTrackerNode timeTrackerNode: timeTrackerNodes) {
+                for (TimeTrackerNode timeTrackerNode : timeTrackerNodes) {
                     timeTrackerNode.stop();
                 }
                 FileOutputStream file = getApplicationContext().openFileOutput("someFile",
@@ -56,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("dikshag", "Exception found");
             }
         }
-
     }
 
     public boolean fileExists(Context context, String filename) {
@@ -92,7 +91,8 @@ public class MainActivity extends AppCompatActivity {
             } catch (Exception e) {
                 Log.i("dikshag", "File not found with exception " + e);
             }
-        } else {
+        }
+        if (rootTimeTrackerNode == null) {
             rootTimeTrackerNode = new TimeTrackerNode(null, "");
         }
     }
