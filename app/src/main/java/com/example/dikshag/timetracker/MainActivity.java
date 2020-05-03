@@ -41,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         if (timeTrackerNodes != null) {
             try {
+                for(TimeTrackerNode timeTrackerNode: timeTrackerNodes) {
+                    timeTrackerNode.stop();
+                }
                 FileOutputStream file = getApplicationContext().openFileOutput("someFile",
                         Context.MODE_PRIVATE);
                 ObjectOutputStream out = new ObjectOutputStream
