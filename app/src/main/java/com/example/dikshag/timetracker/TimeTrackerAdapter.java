@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,16 +24,20 @@ public class TimeTrackerAdapter extends RecyclerView.Adapter<TimeTrackerAdapter.
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         private final LinearLayout tableTrackerTableView;
         private final LinearLayout timeButtonsView;
+        private final ImageButton addButton;
+        private final View rootView;
+
         public MyViewHolder(View v) {
             super(v);
             tableTrackerTableView = v.findViewById(R.id.time_tracker_table);
             timeButtonsView = v.findViewById(R.id.time_buttons);
+            addButton = v.findViewById(R.id.add_button);
+            rootView = v;
         }
 
         public void setView(final TimeTrackerNode timeTrackerNode) {
             final Context context = tableTrackerTableView.getContext();
             tableTrackerTableView.removeAllViews();
-            timeButtonsView.removeAllViews();
             for (int i = 0; i < timeTrackerNode.getHeight() - 1; i++) {
                 LinearLayout spaceLayout = new LinearLayout(tableTrackerTableView.getContext());
                 spaceLayout.setLayoutParams(new LinearLayout.LayoutParams(context.getResources()
@@ -43,19 +48,12 @@ public class TimeTrackerAdapter extends RecyclerView.Adapter<TimeTrackerAdapter.
             if (timeTrackerNode.getHeight() != 0) {
                 TextView textView = new TextView(context);
                 textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams
-                        .WRAP_CONTENT, ViewGroup.LayoutParams
-                        .WRAP_CONTENT));
+                        .WRAP_CONTENT, context
+                        .getResources().getDimensionPixelSize(R.dimen.button_height)));
+                textView.setGravity(Gravity.CENTER);
                 textView.setText(timeTrackerNode.getName());
                 tableTrackerTableView.addView(textView);
             }
-
-            ImageButton addButton = new ImageButton(context);
-            addButton.setBackground(context.getResources().getDrawable(R.drawable
-                    .ic_add_black_18dp));
-            addButton.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams
-                    .WRAP_CONTENT, ViewGroup.LayoutParams
-                    .MATCH_PARENT));
-            tableTrackerTableView.addView(addButton);
             addButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -66,34 +64,17 @@ public class TimeTrackerAdapter extends RecyclerView.Adapter<TimeTrackerAdapter.
                 }
             });
             if (timeTrackerNode.getHeight() != 0) {
-                TextView textView = new TextView(context);
-                textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams
-                        .WRAP_CONTENT, ViewGroup.LayoutParams
-                        .WRAP_CONTENT));
+                TextView textView = rootView.findViewById(R.id.duration);
                 textView.setText(timeTrackerNode.getDuration());
-                timeButtonsView.addView(textView);
 
-                Button startButton = new Button(context);
-                startButton.setTextSize(12);
-                startButton.setText("Start");
-                startButton.setBackgroundColor(0x000000);
-                startButton.setTextColor(Color.BLUE);
+                Button startButton = rootView.findViewById(R.id.start_button);
                 startButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         timeTrackerNode.start();
                     }
                 });
-                ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
-                        context.getResources().getDimensionPixelSize(R.dimen.button_width), context
-                        .getResources().getDimensionPixelSize(R.dimen.button_height));
-                startButton.setLayoutParams(params);
-                timeButtonsView.addView(startButton);
-                Button pauseButton = new Button(context);
-                pauseButton.setTextSize(12);
-                pauseButton.setText("Pause");
-                pauseButton.setBackgroundColor(0x000000);
-                pauseButton.setTextColor(Color.BLUE);
+                Button pauseButton = rootView.findViewById(R.id.pause_button);
                 pauseButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -102,16 +83,7 @@ public class TimeTrackerAdapter extends RecyclerView.Adapter<TimeTrackerAdapter.
 
                     }
                 });
-                params = new ViewGroup.LayoutParams(
-                        context.getResources().getDimensionPixelSize(R.dimen.button_width), context
-                        .getResources().getDimensionPixelSize(R.dimen.button_height));
-                pauseButton.setLayoutParams(params);
-                timeButtonsView.addView(pauseButton);
-                Button stopButton = new Button(context);
-                stopButton.setText("Stop");
-                stopButton.setTextSize(12);
-                stopButton.setBackgroundColor(0x000000);
-                stopButton.setTextColor(Color.BLUE);
+                Button stopButton = rootView.findViewById(R.id.stop_button);
                 stopButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -120,19 +92,8 @@ public class TimeTrackerAdapter extends RecyclerView.Adapter<TimeTrackerAdapter.
 
                     }
                 });
-                params = new ViewGroup.LayoutParams(
-                        context.getResources().getDimensionPixelSize(R.dimen.button_width), context
-                        .getResources().getDimensionPixelSize(R.dimen.button_height));
-                stopButton.setLayoutParams(params);
-                timeButtonsView.addView(stopButton);
 
-                ImageButton deleteButton = new ImageButton(context);
-                deleteButton.setBackground(context.getResources().getDrawable(R.drawable
-                        .ic_cancel_black_18dp));
-                deleteButton.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams
-                        .WRAP_CONTENT, ViewGroup.LayoutParams
-                        .MATCH_PARENT));
-                timeButtonsView.addView(deleteButton);
+                ImageButton deleteButton = rootView.findViewById(R.id.clear_button);
                 deleteButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -140,6 +101,8 @@ public class TimeTrackerAdapter extends RecyclerView.Adapter<TimeTrackerAdapter.
                         ((MainActivity) context).notifyDataSetChanged();
                     }
                 });
+            } else {
+                timeButtonsView.setVisibility(View.GONE);
             }
         }
     }
