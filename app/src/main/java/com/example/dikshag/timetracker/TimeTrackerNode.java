@@ -16,12 +16,22 @@ public class TimeTrackerNode implements Serializable {
     private long localTime;
     private long startLocalTime;
     private int height;
+    private TimeTrackerNode parent;
     private List<TimeTrackerNode> children = new ArrayList<>();
     private Map<LocalDate, Long> dateToTime = new HashMap<>();
 
     TimeTrackerNode(TimeTrackerNode parent, String name) {
         this.name = name;
         this.height = parent == null ? 0 : parent.getHeight() + 1;
+        this.parent = parent;
+    }
+
+    public void delete() {
+        parent.removeChild(this);
+    }
+
+    public void removeChild(TimeTrackerNode node) {
+        this.children.remove(node);
     }
 
     public void start() {

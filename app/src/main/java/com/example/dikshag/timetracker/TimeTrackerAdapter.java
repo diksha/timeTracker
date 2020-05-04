@@ -125,6 +125,21 @@ public class TimeTrackerAdapter extends RecyclerView.Adapter<TimeTrackerAdapter.
                         .getResources().getDimensionPixelSize(R.dimen.button_height));
                 stopButton.setLayoutParams(params);
                 timeButtonsView.addView(stopButton);
+
+                ImageButton deleteButton = new ImageButton(context);
+                deleteButton.setBackground(context.getResources().getDrawable(R.drawable
+                        .ic_cancel_black_18dp));
+                deleteButton.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams
+                        .WRAP_CONTENT, ViewGroup.LayoutParams
+                        .MATCH_PARENT));
+                timeButtonsView.addView(deleteButton);
+                deleteButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        timeTrackerNode.delete();
+                        ((MainActivity) context).notifyDataSetChanged();
+                    }
+                });
             }
         }
     }
