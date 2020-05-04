@@ -1,11 +1,14 @@
 package com.example.dikshag.timetracker;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,11 +25,13 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager layoutManager;
     private TimeTrackerNode rootTimeTrackerNode;
     private List<TimeTrackerNode> timeTrackerNodes;
+//    private Button statistics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+//        statistics = findViewById(R.id.statistics);
         recyclerView = findViewById(R.id.time_tracker_nodes);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -34,6 +39,15 @@ public class MainActivity extends AppCompatActivity {
         // specify an adapter (see also next example)
         mAdapter = new TimeTrackerAdapter(getTimeTrackerRecords());
         recyclerView.setAdapter(mAdapter);
+//        statistics.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Bundle bundle = new Bundle();
+//                bundle.putSerializable("TreeNode", timeTrackerNodes.get(0));
+//                Intent intent = new Intent(StatisticsActivity.class);
+//                intent.putExtras(bundle);
+//            }
+//        });
     }
 
     @Override
