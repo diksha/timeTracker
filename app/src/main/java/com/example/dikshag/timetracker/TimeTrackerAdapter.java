@@ -47,10 +47,10 @@ public class TimeTrackerAdapter extends RecyclerView.Adapter<TimeTrackerAdapter.
             }
             if (timeTrackerNode.getHeight() != 0) {
                 TextView textView = new TextView(context);
-                textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams
-                        .WRAP_CONTENT, context
+                textView.setLayoutParams(new ViewGroup.LayoutParams(context
+                        .getResources().getDimensionPixelSize(R.dimen.button_width), context
                         .getResources().getDimensionPixelSize(R.dimen.button_height)));
-                textView.setGravity(Gravity.CENTER);
+                textView.setGravity(Gravity.CENTER_VERTICAL);
                 textView.setText(timeTrackerNode.getName());
                 tableTrackerTableView.addView(textView);
             }
