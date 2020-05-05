@@ -49,22 +49,26 @@ public class TimeTrackerNode implements Serializable {
         }
     }
 
-    public void stop() {
+    public long stop() {
+        // To get total time add the time in children as well.
+        long totalTimeWithChildren = 0;
         for (TimeTrackerNode timeTrackerNode : this.getChildren()) {
-            timeTrackerNode.stop();
+            totalTimeWithChildren += timeTrackerNode.stop();
         }
         if (start == true) {
             localTime += System.currentTimeMillis() - startLocalTime;
             //Store this somewhere;
             start = false;
         }
+        totalTimeWithChildren += localTime;
         LocalDate date = LocalDate.now();
         if (dateToTime.containsKey(date)) {
-            dateToTime.put(date, dateToTime.get(date) + localTime);
+            dateToTime.put(date, dateToTime.get(date) + totalTimeWithChildren);
         } else {
-            dateToTime.put(date, localTime);
+            dateToTime.put(date, totalTimeWithChildren);
         }
         localTime = 0;
+        return totalTimeWithChildren;
     }
 
     public boolean isStarted() {
