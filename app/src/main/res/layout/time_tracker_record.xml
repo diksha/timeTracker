@@ -25,7 +25,8 @@
         android:layout_width="50dp"
         android:layout_height="30dp"
         android:gravity="center_vertical"
-        android:text="someText "/>
+        android:text="someText "
+        android:singleLine="true"/>
 
     <ImageButton
         android:id="@+id/add_button"
