@@ -73,23 +73,19 @@ public class TimeTrackerAdapter extends RecyclerView.Adapter<TimeTrackerAdapter.
                 TextView durationTextView = rootView.findViewById(R.id.duration);
                 durationTextView.setText(timeTrackerNode.getDuration());
 
-                Button startButton = rootView.findViewById(R.id.start_button);
-                startButton.setOnClickListener(new View.OnClickListener() {
+                ImageButton startPauseButton = rootView.findViewById(R.id.start_pause_button);
+                startPauseButton.setImageDrawable(context.getResources().getDrawable
+                        (timeTrackerNode.isStarted() ? R.drawable.ic_pause_black_18dp : R
+                                .drawable.ic_play_arrow_black_18dp));
+                startPauseButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        timeTrackerNode.start();
-                    }
-                });
-                Button pauseButton = rootView.findViewById(R.id.pause_button);
-                pauseButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        timeTrackerNode.pause();
+                        timeTrackerNode.toggleStartPause();
                         ((MainActivity) context).notifyDataSetChanged();
-
                     }
                 });
-                Button stopButton = rootView.findViewById(R.id.stop_button);
+                ImageButton stopButton = rootView.findViewById(R.id.stop_button);
+
                 stopButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

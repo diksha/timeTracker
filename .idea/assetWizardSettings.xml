@@ -14,8 +14,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_expand_more_black_18dp" />
-                            <entry key="sourceFile" value="$PROJECT_DIR$/../expand_more-black-18dp.svg" />
+                            <entry key="outputName" value="ic_stop_black_18dp" />
+                            <entry key="sourceFile" value="$PROJECT_DIR$/../stop-black-18dp.svg" />
                           </map>
                         </option>
                       </PersistentState>

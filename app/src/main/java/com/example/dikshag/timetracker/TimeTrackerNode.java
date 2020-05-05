@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 public class TimeTrackerNode implements Serializable {
     private String name;
-    private boolean start;
+    private boolean start = false;
     private long localTime;
     private long startLocalTime;
     private int height;
@@ -67,6 +67,10 @@ public class TimeTrackerNode implements Serializable {
         localTime = 0;
     }
 
+    public boolean isStarted() {
+        return start;
+    }
+
     public int getHeight() {
         return height;
     }
@@ -115,5 +119,13 @@ public class TimeTrackerNode implements Serializable {
 
     public void toggleExpanded() {
         isExpanded = !isExpanded();
+    }
+
+    public void toggleStartPause() {
+        if(start) {
+            pause();
+        } else {
+            start();
+        }
     }
 }
