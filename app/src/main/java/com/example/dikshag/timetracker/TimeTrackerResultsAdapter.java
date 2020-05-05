@@ -10,10 +10,17 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class TimeTrackerResultsAdapter extends RecyclerView.Adapter<TimeTrackerResultsAdapter.MyViewHolder> {
     private List<TimeTrackerNode> timeTrackerRecords;
+
+    private LocalDate date = LocalDate.now();
+
+    public void dateChanged(LocalDate dateSet) {
+        date = dateSet;
+    }
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -32,7 +39,7 @@ public class TimeTrackerResultsAdapter extends RecyclerView.Adapter<TimeTrackerR
             rootView = v;
         }
 
-        public void setView(final TimeTrackerNode timeTrackerNode) {
+        public void setView(final TimeTrackerNode timeTrackerNode, LocalDate date) {
             final Context context = tableTrackerTableView.getContext();
             tableTrackerTableView.removeAllViews();
             for (int i = 0; i < timeTrackerNode.getHeight(); i++) {
@@ -61,7 +68,7 @@ public class TimeTrackerResultsAdapter extends RecyclerView.Adapter<TimeTrackerR
             }
             if (timeTrackerNode.getHeight() != 0) {
                 TextView durationTextView = rootView.findViewById(R.id.duration);
-                durationTextView.setText(timeTrackerNode.getDuration());
+                durationTextView.setText(timeTrackerNode.getDurationForDate(date));
             } else {
                 timeButtonsView.setVisibility(View.GONE);
             }
@@ -94,7 +101,7 @@ public class TimeTrackerResultsAdapter extends RecyclerView.Adapter<TimeTrackerR
         TimeTrackerNode timeTrackerNode = timeTrackerRecords.get(position);
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.setView(timeTrackerNode);
+        holder.setView(timeTrackerNode, date);
 
     }
 

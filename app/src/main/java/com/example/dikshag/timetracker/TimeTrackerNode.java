@@ -59,7 +59,7 @@ public class TimeTrackerNode implements Serializable {
             start = false;
         }
         LocalDate date = LocalDate.now();
-        if(dateToTime.containsKey(date)) {
+        if (dateToTime.containsKey(date)) {
             dateToTime.put(date, dateToTime.get(date) + localTime);
         } else {
             dateToTime.put(date, localTime);
@@ -122,10 +122,37 @@ public class TimeTrackerNode implements Serializable {
     }
 
     public void toggleStartPause() {
-        if(start) {
+        if (start) {
             pause();
         } else {
             start();
         }
+    }
+
+    public String getDurationForDate(LocalDate date) {
+        long totalTimeInMillis = dfsUtilForDate(this, date);
+        Log.i("TimeTracker", totalTimeInMillis + "time");
+        if (totalTimeInMillis < 0) {
+            throw new IllegalArgumentException("Duration must be greater than zero!");
+        }
+
+        long days = TimeUnit.MILLISECONDS.toDays(totalTimeInMillis);
+        totalTimeInMillis -= TimeUnit.DAYS.toMillis(days);
+        long hours = TimeUnit.MILLISECONDS.toHours(totalTimeInMillis);
+        totalTimeInMillis -= TimeUnit.HOURS.toMillis(hours);
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(totalTimeInMillis);
+        totalTimeInMillis -= TimeUnit.MINUTES.toMillis(minutes);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(totalTimeInMillis);
+
+        return days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+    }
+
+    private long dfsUtilForDate(TimeTrackerNode rootTimeTrackerNode, LocalDate date) {
+        long timeReturned = 0;
+        for (TimeTrackerNode timeTrackerNode : rootTimeTrackerNode.getChildren()) {
+            timeReturned += dfsUtil(timeTrackerNode);
+        }
+        return rootTimeTrackerNode.dateToTime.containsKey(date) ? rootTimeTrackerNode.dateToTime
+                .get(date) + timeReturned : timeReturned;
     }
 }
