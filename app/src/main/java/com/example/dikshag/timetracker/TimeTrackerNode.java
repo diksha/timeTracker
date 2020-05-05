@@ -1,6 +1,6 @@
 package com.example.dikshag.timetracker;
 
-import android.text.Editable;
+import android.os.Handler;
 import android.util.Log;
 
 import java.io.Serializable;
@@ -21,6 +21,11 @@ public class TimeTrackerNode implements Serializable {
     private List<TimeTrackerNode> children = new ArrayList<>();
     private Map<LocalDate, Long> dateToTime = new HashMap<>();
     private boolean isExpanded = true;
+    private Handler handler = new Handler();
+    private Runnable runnable;
+    private int delay = 60000;
+    private TimeChangeListener timeChangeListener;
+
 
     TimeTrackerNode(TimeTrackerNode parent, String name) {
         this.name = name;
@@ -40,12 +45,24 @@ public class TimeTrackerNode implements Serializable {
         if (start == false) {
             startLocalTime = System.currentTimeMillis();
             start = true;
+            handler.postDelayed(runnable = new Runnable() {
+                public void run() {
+                    handler.postDelayed(runnable, delay);
+                    localTime += System.currentTimeMillis() - startLocalTime;
+                    startLocalTime = System.currentTimeMillis();
+                    if (timeChangeListener != null)
+                        timeChangeListener.onTimeChanged();
+                }
+            }, delay);
         }
     }
 
     public void pause() {
         if (start == true) {
+            handler.removeCallbacks(runnable);
             localTime += System.currentTimeMillis() - startLocalTime;
+            if (timeChangeListener != null)
+                timeChangeListener.onTimeChanged();
             start = false;
         }
     }
@@ -57,6 +74,7 @@ public class TimeTrackerNode implements Serializable {
             totalTimeWithChildren += timeTrackerNode.stop();
         }
         if (start == true) {
+            handler.removeCallbacks(runnable);
             localTime += System.currentTimeMillis() - startLocalTime;
             //Store this somewhere;
             start = false;
@@ -69,6 +87,8 @@ public class TimeTrackerNode implements Serializable {
             dateToTime.put(date, totalTimeWithChildren);
         }
         localTime = 0;
+        if (timeChangeListener != null)
+            timeChangeListener.onTimeChanged();
         return totalTimeWithChildren;
     }
 
@@ -164,5 +184,9 @@ public class TimeTrackerNode implements Serializable {
     public void resetName(String text) {
         this.name = text;
 
+    }
+
+    public void addListener(TimeChangeListener timeChangeListener) {
+        this.timeChangeListener = timeChangeListener;
     }
 }

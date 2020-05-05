@@ -30,17 +30,20 @@ public class TimeTrackerResultsAdapter extends RecyclerView.Adapter<TimeTrackerR
         private final LinearLayout timeButtonsView;
         private final ImageButton addButton;
         private final View rootView;
+        private final Context context;
+        private TimeTrackerNode timeTrackerNode;
 
         public MyViewHolder(View v) {
             super(v);
             tableTrackerTableView = v.findViewById(R.id.time_tracker_table);
             timeButtonsView = v.findViewById(R.id.time_buttons);
             addButton = v.findViewById(R.id.add_button);
+            context = tableTrackerTableView.getContext();
             rootView = v;
         }
 
         public void setView(final TimeTrackerNode timeTrackerNode, LocalDate date) {
-            final Context context = tableTrackerTableView.getContext();
+            this.timeTrackerNode =  timeTrackerNode;
             tableTrackerTableView.removeAllViews();
             for (int i = 0; i < timeTrackerNode.getHeight(); i++) {
                 LinearLayout spaceLayout = new LinearLayout(tableTrackerTableView.getContext());

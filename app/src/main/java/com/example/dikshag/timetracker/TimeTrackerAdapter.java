@@ -22,11 +22,13 @@ public class TimeTrackerAdapter extends RecyclerView.Adapter<TimeTrackerAdapter.
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
+    public static class MyViewHolder extends RecyclerView.ViewHolder implements TimeChangeListener {
         private final LinearLayout tableTrackerTableView;
         private final LinearLayout timeButtonsView;
         private final ImageButton addButton;
         private final View rootView;
+        private final Context context;
+        private TimeTrackerNode timeTrackerNode;
 
         public MyViewHolder(View v) {
             super(v);
@@ -34,10 +36,13 @@ public class TimeTrackerAdapter extends RecyclerView.Adapter<TimeTrackerAdapter.
             timeButtonsView = v.findViewById(R.id.time_buttons);
             addButton = v.findViewById(R.id.add_button);
             rootView = v;
+            context = tableTrackerTableView.getContext();
+
         }
 
         public void setView(final TimeTrackerNode timeTrackerNode) {
-            final Context context = tableTrackerTableView.getContext();
+            this.timeTrackerNode = timeTrackerNode;
+            timeTrackerNode.addListener(this);
             tableTrackerTableView.removeAllViews();
             for (int i = 0; i < timeTrackerNode.getHeight(); i++) {
                 LinearLayout spaceLayout = new LinearLayout(tableTrackerTableView.getContext());
@@ -120,6 +125,12 @@ public class TimeTrackerAdapter extends RecyclerView.Adapter<TimeTrackerAdapter.
             } else {
                 timeButtonsView.setVisibility(View.GONE);
             }
+        }
+
+
+        @Override
+        public void onTimeChanged() {
+            ((MainActivity)context).notifyCurrentItemChanged(this.timeTrackerNode);
         }
     }
 
