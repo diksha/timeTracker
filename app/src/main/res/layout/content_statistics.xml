@@ -8,4 +8,10 @@
     tools:context=".StatisticsActivity"
     tools:showIn="@layout/activity_statistics">
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/time_tracker_result_nodes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"/>
+
 </android.support.constraint.ConstraintLayout>

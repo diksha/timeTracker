@@ -40,7 +40,8 @@ public class MainActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         init();
-        mAdapter = new TimeTrackerAdapter(getTimeTrackerRecords());
+        this.timeTrackerNodes = TimeTrackerNodesUtil.getTimeTrackerRecords(rootTimeTrackerNode);
+        mAdapter = new TimeTrackerAdapter(this.timeTrackerNodes);
         recyclerView.setAdapter(mAdapter);
     }
 
@@ -95,23 +96,6 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    private List<TimeTrackerNode> getTimeTrackerRecords() {
-        List<TimeTrackerNode> timeTrackerNodes = new ArrayList<>();
-        dfsUtil(timeTrackerNodes, rootTimeTrackerNode);
-        this.timeTrackerNodes = timeTrackerNodes;
-        return timeTrackerNodes;
-    }
-
-    private void dfsUtil(List<TimeTrackerNode> timeTrackerNodes, TimeTrackerNode
-            rootTimeTrackerNode) {
-        timeTrackerNodes.add(rootTimeTrackerNode);
-        if(rootTimeTrackerNode.isExpanded()) {
-            for (TimeTrackerNode timeTrackerNode : rootTimeTrackerNode.getChildren()) {
-                dfsUtil(timeTrackerNodes, timeTrackerNode);
-            }
-        }
-    }
-
 
     private void init() {
         if (fileExists(getApplicationContext(), "someFile")) {
@@ -130,7 +114,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void notifyDataSetChanged() {
-        mAdapter.dataSetChanged(getTimeTrackerRecords());
+        this.timeTrackerNodes = TimeTrackerNodesUtil.getTimeTrackerRecords(rootTimeTrackerNode);
+        mAdapter.dataSetChanged(this.timeTrackerNodes);
         mAdapter.notifyDataSetChanged();
     }
 }
