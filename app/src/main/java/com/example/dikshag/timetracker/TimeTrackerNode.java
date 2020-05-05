@@ -1,5 +1,6 @@
 package com.example.dikshag.timetracker;
 
+import android.text.Editable;
 import android.util.Log;
 
 import java.io.Serializable;
@@ -158,5 +159,10 @@ public class TimeTrackerNode implements Serializable {
         }
         return rootTimeTrackerNode.dateToTime.containsKey(date) ? rootTimeTrackerNode.dateToTime
                 .get(date) + timeReturned : timeReturned;
+    }
+
+    public void resetName(String text) {
+        this.name = text;
+
     }
 }

@@ -20,12 +20,14 @@
         android:background="@color/colorPrimary"
         android:src="@drawable/ic_chevron_right_black_18dp" />
 
-    <TextView
+    <EditText
         android:id="@+id/time_tracker_name"
         android:layout_width="50dp"
         android:layout_height="30dp"
         android:gravity="center_vertical"
-        android:text="someText "
+        android:textSize="12sp"
+        android:text="someText"
+        android:background="@null"
         android:singleLine="true"/>
 
     <ImageButton

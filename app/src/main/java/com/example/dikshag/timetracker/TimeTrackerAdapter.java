@@ -3,10 +3,13 @@ package com.example.dikshag.timetracker;
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -54,12 +57,23 @@ public class TimeTrackerAdapter extends RecyclerView.Adapter<TimeTrackerAdapter.
                     ((MainActivity) context).notifyDataSetChanged();
                 }
             });
-            TextView timeTrackerNameTextView = rootView.findViewById(R.id.time_tracker_name);
+            final EditText timeTrackerNameTextView = rootView.findViewById(R.id.time_tracker_name);
             if (timeTrackerNode.getHeight() != 0) {
                 timeTrackerNameTextView.setText(timeTrackerNode.getName());
             } else {
                 timeTrackerNameTextView.setVisibility(View.GONE);
             }
+            timeTrackerNameTextView.setOnKeyListener(new View.OnKeyListener() {
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                        timeTrackerNode.resetName(timeTrackerNameTextView.getText().toString());
+                        ((MainActivity)context).notifyCurrentItemChanged(timeTrackerNode);
+                        return true;
+                    }
+                    return false;
+                }
+            });
+
             addButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

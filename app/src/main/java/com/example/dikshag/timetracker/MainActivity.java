@@ -118,4 +118,8 @@ public class MainActivity extends AppCompatActivity {
         mAdapter.dataSetChanged(this.timeTrackerNodes);
         mAdapter.notifyDataSetChanged();
     }
+
+    public void notifyCurrentItemChanged(TimeTrackerNode timeTrackerNode) {
+        mAdapter.notifyItemChanged(timeTrackerNodes.indexOf(timeTrackerNode));
+    }
 }
