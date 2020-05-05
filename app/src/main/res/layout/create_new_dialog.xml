@@ -18,7 +18,8 @@
         android:layout_height="wrap_content"
         android:background="@drawable/edit_text_border"
         android:padding="10dp"
-        android:layout_margin="5dp">
+        android:layout_margin="5dp"
+        android:singleLine="true">
 
         <requestFocus />
 
