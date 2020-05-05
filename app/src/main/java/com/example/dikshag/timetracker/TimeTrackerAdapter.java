@@ -1,10 +1,8 @@
 package com.example.dikshag.timetracker;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,21 +36,29 @@ public class TimeTrackerAdapter extends RecyclerView.Adapter<TimeTrackerAdapter.
         public void setView(final TimeTrackerNode timeTrackerNode) {
             final Context context = tableTrackerTableView.getContext();
             tableTrackerTableView.removeAllViews();
-            for (int i = 0; i < timeTrackerNode.getHeight() - 1; i++) {
+            for (int i = 0; i < timeTrackerNode.getHeight(); i++) {
                 LinearLayout spaceLayout = new LinearLayout(tableTrackerTableView.getContext());
                 spaceLayout.setLayoutParams(new LinearLayout.LayoutParams(context.getResources()
                         .getDimensionPixelSize(R.dimen.width_empty), ViewGroup.LayoutParams
                         .WRAP_CONTENT));
                 tableTrackerTableView.addView(spaceLayout);
             }
+            ImageButton expandCollapseButton = rootView.findViewById(R.id.expand_collapse);
+            expandCollapseButton.setImageDrawable(context.getResources().getDrawable
+                    (timeTrackerNode.isExpanded() ? R.drawable.ic_expand_more_black_18dp : R
+                            .drawable.ic_chevron_right_black_18dp));
+            expandCollapseButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    timeTrackerNode.toggleExpanded();
+                    ((MainActivity) context).notifyDataSetChanged();
+                }
+            });
+            TextView timeTrackerNameTextView = rootView.findViewById(R.id.time_tracker_name);
             if (timeTrackerNode.getHeight() != 0) {
-                TextView textView = new TextView(context);
-                textView.setLayoutParams(new ViewGroup.LayoutParams(context
-                        .getResources().getDimensionPixelSize(R.dimen.button_width), context
-                        .getResources().getDimensionPixelSize(R.dimen.button_height)));
-                textView.setGravity(Gravity.CENTER_VERTICAL);
-                textView.setText(timeTrackerNode.getName());
-                tableTrackerTableView.addView(textView);
+                timeTrackerNameTextView.setText(timeTrackerNode.getName());
+            } else {
+                timeTrackerNameTextView.setVisibility(View.GONE);
             }
             addButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -64,8 +70,8 @@ public class TimeTrackerAdapter extends RecyclerView.Adapter<TimeTrackerAdapter.
                 }
             });
             if (timeTrackerNode.getHeight() != 0) {
-                TextView textView = rootView.findViewById(R.id.duration);
-                textView.setText(timeTrackerNode.getDuration());
+                TextView durationTextView = rootView.findViewById(R.id.duration);
+                durationTextView.setText(timeTrackerNode.getDuration());
 
                 Button startButton = rootView.findViewById(R.id.start_button);
                 startButton.setOnClickListener(new View.OnClickListener() {

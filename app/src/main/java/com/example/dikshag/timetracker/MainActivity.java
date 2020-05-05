@@ -93,8 +93,10 @@ public class MainActivity extends AppCompatActivity {
     private void dfsUtil(List<TimeTrackerNode> timeTrackerNodes, TimeTrackerNode
             rootTimeTrackerNode) {
         timeTrackerNodes.add(rootTimeTrackerNode);
-        for (TimeTrackerNode timeTrackerNode : rootTimeTrackerNode.getChildren()) {
-            dfsUtil(timeTrackerNodes, timeTrackerNode);
+        if(rootTimeTrackerNode.isExpanded()) {
+            for (TimeTrackerNode timeTrackerNode : rootTimeTrackerNode.getChildren()) {
+                dfsUtil(timeTrackerNodes, timeTrackerNode);
+            }
         }
     }
 

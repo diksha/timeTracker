@@ -19,6 +19,7 @@ public class TimeTrackerNode implements Serializable {
     private TimeTrackerNode parent;
     private List<TimeTrackerNode> children = new ArrayList<>();
     private Map<LocalDate, Long> dateToTime = new HashMap<>();
+    private boolean isExpanded = true;
 
     TimeTrackerNode(TimeTrackerNode parent, String name) {
         this.name = name;
@@ -106,5 +107,13 @@ public class TimeTrackerNode implements Serializable {
             timeReturned += dfsUtil(timeTrackerNode);
         }
         return rootTimeTrackerNode.localTime + timeReturned;
+    }
+
+    public boolean isExpanded() {
+        return isExpanded;
+    }
+
+    public void toggleExpanded() {
+        isExpanded = !isExpanded();
     }
 }
