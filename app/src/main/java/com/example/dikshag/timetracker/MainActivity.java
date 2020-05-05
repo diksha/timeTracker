@@ -8,6 +8,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -26,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager layoutManager;
     private TimeTrackerNode rootTimeTrackerNode;
     private List<TimeTrackerNode> timeTrackerNodes;
-    private Button statistics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,23 +36,33 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        statistics = findViewById(R.id.statistics);
         recyclerView = findViewById(R.id.time_tracker_nodes);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         init();
         mAdapter = new TimeTrackerAdapter(getTimeTrackerRecords());
         recyclerView.setAdapter(mAdapter);
-        statistics.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("TreeNode", timeTrackerNodes.get(0));
-                Intent intent = new Intent(getApplicationContext(), StatisticsActivity.class);
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-        });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.statistics) {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("TreeNode", timeTrackerNodes.get(0));
+            Intent intent = new Intent(getApplicationContext(), StatisticsActivity.class);
+            intent.putExtras(bundle);
+            startActivity(intent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

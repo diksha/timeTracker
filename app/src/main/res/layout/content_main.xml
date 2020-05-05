@@ -16,12 +16,5 @@
         android:layout_margin="20dp"/>
 
 
-    <Button
-        android:id="@+id/statistics"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Statistics"/>
-
-
 
 </LinearLayout>
