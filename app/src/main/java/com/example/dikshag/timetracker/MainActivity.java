@@ -103,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
                 FileInputStream fis = getApplicationContext().openFileInput("someFile");
                 ObjectInputStream is = new ObjectInputStream(fis);
                 rootTimeTrackerNode = (TimeTrackerNode) is.readObject();
+                fis.close();
             } catch (Exception e) {
                 Log.i("dikshag", "File not found with exception " + e);
             }

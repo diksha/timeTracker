@@ -21,16 +21,19 @@ public class TimeTrackerNode implements Serializable {
     private List<TimeTrackerNode> children = new ArrayList<>();
     private Map<LocalDate, Long> dateToTime = new HashMap<>();
     private boolean isExpanded = true;
-    private Handler handler = new Handler();
     private Runnable runnable;
     private int delay = 60000;
-    private TimeChangeListener timeChangeListener;
+
+    // Non serializable objects.
+    transient private TimeChangeListener timeChangeListener;
+    transient private Handler handler;
 
 
     TimeTrackerNode(TimeTrackerNode parent, String name) {
         this.name = name;
         this.height = parent == null ? 0 : parent.getHeight() + 1;
         this.parent = parent;
+        handler = new Handler();
     }
 
     public void delete() {
@@ -42,6 +45,9 @@ public class TimeTrackerNode implements Serializable {
     }
 
     public void start() {
+        if(handler == null) {
+            handler = new Handler();
+        }
         if (start == false) {
             startLocalTime = System.currentTimeMillis();
             start = true;
@@ -59,6 +65,9 @@ public class TimeTrackerNode implements Serializable {
 
     public void pause() {
         if (start == true) {
+            if(handler == null) {
+                handler = new Handler();
+            }
             handler.removeCallbacks(runnable);
             localTime += System.currentTimeMillis() - startLocalTime;
             if (timeChangeListener != null)
@@ -74,6 +83,9 @@ public class TimeTrackerNode implements Serializable {
             totalTimeWithChildren += timeTrackerNode.stop();
         }
         if (start == true) {
+            if(handler == null) {
+                handler = new Handler();
+            }
             handler.removeCallbacks(runnable);
             localTime += System.currentTimeMillis() - startLocalTime;
             //Store this somewhere;
