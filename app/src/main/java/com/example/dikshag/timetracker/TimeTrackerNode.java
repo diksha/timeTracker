@@ -20,8 +20,6 @@ public class TimeTrackerNode implements Serializable {
     private List<TimeTrackerNode> children = new ArrayList<>();
     private Map<LocalDate, Long> dateToTime = new HashMap<>();
     private boolean isExpanded = true;
-    private Runnable runnable;
-    private int delay = 60000;
 
     // Non serializable objects.
     transient private TimeChangeListener timeChangeListener;

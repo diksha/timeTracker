@@ -3,6 +3,7 @@ package com.example.dikshag.timetracker;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,6 +26,9 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager layoutManager;
     private TimeTrackerNode rootTimeTrackerNode;
     private List<TimeTrackerNode> timeTrackerNodes;
+    private Handler handler = new Handler();
+    private Runnable runnable;
+    private int delay = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,5 +127,19 @@ public class MainActivity extends AppCompatActivity {
 
     public void notifyCurrentItemChanged(TimeTrackerNode timeTrackerNode) {
         mAdapter.notifyItemChanged(timeTrackerNodes.indexOf(timeTrackerNode));
+    }
+
+    public void startOrPauseTimer(final TimeTrackerNode timeTrackerNode) {
+        if(timeTrackerNode.isStarted()) {
+            handler.postDelayed(runnable = new Runnable() {
+                public void run() {
+                    handler.postDelayed(runnable, delay);
+                    timeTrackerNode.setTime();
+                }
+            }, delay);
+        } else {
+            handler.removeCallbacks(runnable);
+            handler.removeCallbacksAndMessages(null);
+        }
     }
 }

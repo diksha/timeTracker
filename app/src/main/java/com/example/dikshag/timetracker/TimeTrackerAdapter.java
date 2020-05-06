@@ -100,6 +100,7 @@ public class TimeTrackerAdapter extends RecyclerView.Adapter<TimeTrackerAdapter.
                     @Override
                     public void onClick(View view) {
                         timeTrackerNode.toggleStartPause();
+                        ((MainActivity)context).startOrPauseTimer(timeTrackerNode);
                         ((MainActivity)context).notifyCurrentItemChanged(timeTrackerNode);
                     }
                 });
@@ -109,6 +110,7 @@ public class TimeTrackerAdapter extends RecyclerView.Adapter<TimeTrackerAdapter.
                     @Override
                     public void onClick(View view) {
                         timeTrackerNode.stop();
+                        ((MainActivity)context).startOrPauseTimer(timeTrackerNode);
                     }
                 });
 
