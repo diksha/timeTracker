@@ -100,6 +100,7 @@ public class TimeTrackerAdapter extends RecyclerView.Adapter<TimeTrackerAdapter.
                     @Override
                     public void onClick(View view) {
                         timeTrackerNode.toggleStartPause();
+                        ((MainActivity)context).notifyCurrentItemChanged(timeTrackerNode);
                     }
                 });
                 ImageButton stopButton = rootView.findViewById(R.id.stop_button);

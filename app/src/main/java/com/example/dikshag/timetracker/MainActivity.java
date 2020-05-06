@@ -9,17 +9,13 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -55,8 +51,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if(id == R.id.statistics) {
+        if (id == R.id.statistics) {
             Bundle bundle = new Bundle();
+            if (timeTrackerNodes != null) {
+                for (TimeTrackerNode timeTrackerNode : timeTrackerNodes) {
+                    timeTrackerNode.stop();
+                }
+            }
             bundle.putSerializable("TreeNode", timeTrackerNodes.get(0));
             Intent intent = new Intent(getApplicationContext(), StatisticsActivity.class);
             intent.putExtras(bundle);

@@ -1,6 +1,5 @@
 package com.example.dikshag.timetracker;
 
-import android.os.Handler;
 import android.util.Log;
 
 import java.io.Serializable;
@@ -26,14 +25,12 @@ public class TimeTrackerNode implements Serializable {
 
     // Non serializable objects.
     transient private TimeChangeListener timeChangeListener;
-    transient private Handler handler;
 
 
     TimeTrackerNode(TimeTrackerNode parent, String name) {
         this.name = name;
         this.height = parent == null ? 0 : parent.getHeight() + 1;
         this.parent = parent;
-        handler = new Handler();
     }
 
     public void delete() {
@@ -45,30 +42,14 @@ public class TimeTrackerNode implements Serializable {
     }
 
     public void start() {
-        if(handler == null) {
-            handler = new Handler();
-        }
         if (start == false) {
             startLocalTime = System.currentTimeMillis();
             start = true;
-            handler.postDelayed(runnable = new Runnable() {
-                public void run() {
-                    handler.postDelayed(runnable, delay);
-                    localTime += System.currentTimeMillis() - startLocalTime;
-                    startLocalTime = System.currentTimeMillis();
-                    if (timeChangeListener != null)
-                        timeChangeListener.onTimeChanged();
-                }
-            }, delay);
         }
     }
 
     public void pause() {
         if (start == true) {
-            if(handler == null) {
-                handler = new Handler();
-            }
-            handler.removeCallbacks(runnable);
             localTime += System.currentTimeMillis() - startLocalTime;
             if (timeChangeListener != null)
                 timeChangeListener.onTimeChanged();
@@ -83,10 +64,6 @@ public class TimeTrackerNode implements Serializable {
             totalTimeWithChildren += timeTrackerNode.stop();
         }
         if (start == true) {
-            if(handler == null) {
-                handler = new Handler();
-            }
-            handler.removeCallbacks(runnable);
             localTime += System.currentTimeMillis() - startLocalTime;
             //Store this somewhere;
             start = false;
@@ -200,5 +177,12 @@ public class TimeTrackerNode implements Serializable {
 
     public void addListener(TimeChangeListener timeChangeListener) {
         this.timeChangeListener = timeChangeListener;
+    }
+
+    public void setTime() {
+        localTime += System.currentTimeMillis() - startLocalTime;
+        startLocalTime = System.currentTimeMillis();
+        if (timeChangeListener != null)
+            timeChangeListener.onTimeChanged();
     }
 }
