@@ -100,7 +100,6 @@ public class TimeTrackerAdapter extends RecyclerView.Adapter<TimeTrackerAdapter.
                     @Override
                     public void onClick(View view) {
                         timeTrackerNode.toggleStartPause();
-                        ((MainActivity) context).notifyDataSetChanged();
                     }
                 });
                 ImageButton stopButton = rootView.findViewById(R.id.stop_button);
@@ -109,8 +108,6 @@ public class TimeTrackerAdapter extends RecyclerView.Adapter<TimeTrackerAdapter.
                     @Override
                     public void onClick(View view) {
                         timeTrackerNode.stop();
-                        ((MainActivity) context).notifyDataSetChanged();
-
                     }
                 });
 
