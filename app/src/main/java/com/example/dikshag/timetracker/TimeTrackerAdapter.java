@@ -22,13 +22,12 @@ public class TimeTrackerAdapter extends RecyclerView.Adapter<TimeTrackerAdapter.
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
-    public static class MyViewHolder extends RecyclerView.ViewHolder implements TimeChangeListener {
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
         private final LinearLayout tableTrackerTableView;
         private final LinearLayout timeButtonsView;
         private final ImageButton addButton;
         private final View rootView;
         private final Context context;
-        private TimeTrackerNode timeTrackerNode;
 
         public MyViewHolder(View v) {
             super(v);
@@ -41,8 +40,6 @@ public class TimeTrackerAdapter extends RecyclerView.Adapter<TimeTrackerAdapter.
         }
 
         public void setView(final TimeTrackerNode timeTrackerNode) {
-            this.timeTrackerNode = timeTrackerNode;
-            timeTrackerNode.addListener(this);
             tableTrackerTableView.removeAllViews();
             for (int i = 0; i < timeTrackerNode.getHeight(); i++) {
                 LinearLayout spaceLayout = new LinearLayout(tableTrackerTableView.getContext());
@@ -93,24 +90,14 @@ public class TimeTrackerAdapter extends RecyclerView.Adapter<TimeTrackerAdapter.
                 durationTextView.setText(timeTrackerNode.getDuration());
 
                 ImageButton startPauseButton = rootView.findViewById(R.id.start_pause_button);
-                startPauseButton.setImageDrawable(context.getResources().getDrawable
-                        (timeTrackerNode.isStarted() ? R.drawable.ic_pause_black_18dp : R
-                                .drawable.ic_play_arrow_black_18dp));
                 startPauseButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        timeTrackerNode.toggleStartPause();
-                        ((MainActivity)context).startOrPauseTimer(timeTrackerNode);
-                        ((MainActivity)context).notifyCurrentItemChanged(timeTrackerNode);
-                    }
-                });
-                ImageButton stopButton = rootView.findViewById(R.id.stop_button);
-
-                stopButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        timeTrackerNode.stop();
-                        ((MainActivity)context).startOrPauseTimer(timeTrackerNode);
+                            TimeTrackerDialogFragment dialogFragment = new TimeTrackerDialogFragment();
+                            dialogFragment.init(timeTrackerNode);
+                            dialogFragment.show(((FragmentActivity) context).getSupportFragmentManager
+                                    (), "timeTrackerDialog");
+                            dialogFragment.setCancelable(false);
                     }
                 });
 
@@ -125,12 +112,6 @@ public class TimeTrackerAdapter extends RecyclerView.Adapter<TimeTrackerAdapter.
             } else {
                 timeButtonsView.setVisibility(View.GONE);
             }
-        }
-
-
-        @Override
-        public void onTimeChanged() {
-            ((MainActivity)context).notifyCurrentItemChanged(this.timeTrackerNode);
         }
     }
 

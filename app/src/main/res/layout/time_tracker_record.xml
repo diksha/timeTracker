@@ -61,15 +61,8 @@
             android:layout_height="@dimen/button_height"
             android:layout_margin="2dp"
             android:background="@color/colorPrimary"
-            android:src="@drawable/ic_play_arrow_black_18dp" />
-
-        <ImageButton
-            android:id="@+id/stop_button"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/button_height"
-            android:layout_margin="2dp"
-            android:background="@color/colorPrimary"
-            android:src="@drawable/ic_stop_black_18dp" />
+            android:tint="#00FF00"
+            android:src="@drawable/ic_play_arrow_black_18dp"/>
 
         <ImageButton
             android:id="@+id/clear_button"

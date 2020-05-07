@@ -26,8 +26,6 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager layoutManager;
     private TimeTrackerNode rootTimeTrackerNode;
     private List<TimeTrackerNode> timeTrackerNodes;
-    private Handler handler = new Handler();
-    private Runnable runnable;
     private int delay = 1000;
 
     @Override
@@ -57,11 +55,6 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         if (id == R.id.statistics) {
             Bundle bundle = new Bundle();
-            if (timeTrackerNodes != null) {
-                for (TimeTrackerNode timeTrackerNode : timeTrackerNodes) {
-                    timeTrackerNode.stop();
-                }
-            }
             bundle.putSerializable("TreeNode", timeTrackerNodes.get(0));
             Intent intent = new Intent(getApplicationContext(), StatisticsActivity.class);
             intent.putExtras(bundle);
@@ -76,9 +69,6 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         if (timeTrackerNodes != null) {
             try {
-                for (TimeTrackerNode timeTrackerNode : timeTrackerNodes) {
-                    timeTrackerNode.stop();
-                }
                 FileOutputStream file = getApplicationContext().openFileOutput("someFile",
                         Context.MODE_PRIVATE);
                 ObjectOutputStream out = new ObjectOutputStream
@@ -127,19 +117,5 @@ public class MainActivity extends AppCompatActivity {
 
     public void notifyCurrentItemChanged(TimeTrackerNode timeTrackerNode) {
         mAdapter.notifyItemChanged(timeTrackerNodes.indexOf(timeTrackerNode));
-    }
-
-    public void startOrPauseTimer(final TimeTrackerNode timeTrackerNode) {
-        if(timeTrackerNode.isStarted()) {
-            handler.postDelayed(runnable = new Runnable() {
-                public void run() {
-                    handler.postDelayed(runnable, delay);
-                    timeTrackerNode.setTime();
-                }
-            }, delay);
-        } else {
-            handler.removeCallbacks(runnable);
-            handler.removeCallbacksAndMessages(null);
-        }
     }
 }

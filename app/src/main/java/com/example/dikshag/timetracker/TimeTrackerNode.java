@@ -13,17 +13,11 @@ import java.util.concurrent.TimeUnit;
 public class TimeTrackerNode implements Serializable {
     private String name;
     private boolean start = false;
-    private long localTime;
-    private long startLocalTime;
     private int height;
     private TimeTrackerNode parent;
     private List<TimeTrackerNode> children = new ArrayList<>();
     private Map<LocalDate, Long> dateToTime = new HashMap<>();
     private boolean isExpanded = true;
-
-    // Non serializable objects.
-    transient private TimeChangeListener timeChangeListener;
-
 
     TimeTrackerNode(TimeTrackerNode parent, String name) {
         this.name = name;
@@ -39,44 +33,8 @@ public class TimeTrackerNode implements Serializable {
         this.children.remove(node);
     }
 
-    public void start() {
-        if (start == false) {
-            startLocalTime = System.currentTimeMillis();
-            start = true;
-        }
-    }
-
-    public void pause() {
-        if (start == true) {
-            localTime += System.currentTimeMillis() - startLocalTime;
-            if (timeChangeListener != null)
-                timeChangeListener.onTimeChanged();
-            start = false;
-        }
-    }
-
-    public long stop() {
-        // To get total time add the time in children as well.
-        long totalTimeWithChildren = 0;
-        for (TimeTrackerNode timeTrackerNode : this.getChildren()) {
-            totalTimeWithChildren += timeTrackerNode.stop();
-        }
-        if (start == true) {
-            localTime += System.currentTimeMillis() - startLocalTime;
-            //Store this somewhere;
-            start = false;
-        }
-        totalTimeWithChildren += localTime;
-        LocalDate date = LocalDate.now();
-        if (dateToTime.containsKey(date)) {
-            dateToTime.put(date, dateToTime.get(date) + totalTimeWithChildren);
-        } else {
-            dateToTime.put(date, totalTimeWithChildren);
-        }
-        localTime = 0;
-        if (timeChangeListener != null)
-            timeChangeListener.onTimeChanged();
-        return totalTimeWithChildren;
+    public TimeTrackerNode getParent() {
+        return parent;
     }
 
     public boolean isStarted() {
@@ -100,29 +58,7 @@ public class TimeTrackerNode implements Serializable {
     }
 
     public String getDuration() {
-        long totalTimeInMillis = dfsUtil(this);
-        Log.i("TimeTracker", totalTimeInMillis + "time");
-        if (totalTimeInMillis < 0) {
-            throw new IllegalArgumentException("Duration must be greater than zero!");
-        }
-
-        long days = TimeUnit.MILLISECONDS.toDays(totalTimeInMillis);
-        totalTimeInMillis -= TimeUnit.DAYS.toMillis(days);
-        long hours = TimeUnit.MILLISECONDS.toHours(totalTimeInMillis);
-        totalTimeInMillis -= TimeUnit.HOURS.toMillis(hours);
-        long minutes = TimeUnit.MILLISECONDS.toMinutes(totalTimeInMillis);
-        totalTimeInMillis -= TimeUnit.MINUTES.toMillis(minutes);
-        long seconds = TimeUnit.MILLISECONDS.toSeconds(totalTimeInMillis);
-
-        return days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
-    }
-
-    private long dfsUtil(TimeTrackerNode rootTimeTrackerNode) {
-        long timeReturned = 0;
-        for (TimeTrackerNode timeTrackerNode : rootTimeTrackerNode.getChildren()) {
-            timeReturned += dfsUtil(timeTrackerNode);
-        }
-        return rootTimeTrackerNode.localTime + timeReturned;
+        return getDurationForDate(LocalDate.now());
     }
 
     public boolean isExpanded() {
@@ -131,14 +67,6 @@ public class TimeTrackerNode implements Serializable {
 
     public void toggleExpanded() {
         isExpanded = !isExpanded();
-    }
-
-    public void toggleStartPause() {
-        if (start) {
-            pause();
-        } else {
-            start();
-        }
     }
 
     public String getDurationForDate(LocalDate date) {
@@ -162,7 +90,7 @@ public class TimeTrackerNode implements Serializable {
     private long dfsUtilForDate(TimeTrackerNode rootTimeTrackerNode, LocalDate date) {
         long timeReturned = 0;
         for (TimeTrackerNode timeTrackerNode : rootTimeTrackerNode.getChildren()) {
-            timeReturned += dfsUtil(timeTrackerNode);
+            timeReturned += dfsUtilForDate(timeTrackerNode, date);
         }
         return rootTimeTrackerNode.dateToTime.containsKey(date) ? rootTimeTrackerNode.dateToTime
                 .get(date) + timeReturned : timeReturned;
@@ -173,14 +101,12 @@ public class TimeTrackerNode implements Serializable {
 
     }
 
-    public void addListener(TimeChangeListener timeChangeListener) {
-        this.timeChangeListener = timeChangeListener;
-    }
-
-    public void setTime() {
-        localTime += System.currentTimeMillis() - startLocalTime;
-        startLocalTime = System.currentTimeMillis();
-        if (timeChangeListener != null)
-            timeChangeListener.onTimeChanged();
+    public void setTimeElapsed(long timePassed) {
+        LocalDate date = LocalDate.now();
+        if (dateToTime.containsKey(date)) {
+            dateToTime.put(date, dateToTime.get(date) + timePassed);
+        } else {
+            dateToTime.put(date, timePassed);
+        }
     }
 }
