@@ -56,7 +56,7 @@ public class TimeTrackerAdapter extends RecyclerView.Adapter<TimeTrackerAdapter.
                 @Override
                 public void onClick(View v) {
                     timeTrackerNode.toggleExpanded();
-                    ((MainActivity) context).notifyDataSetChanged();
+                    ((MainActivity) context).notifyItemInsertedOrDeleted();
                 }
             });
             final EditText timeTrackerNameTextView = rootView.findViewById(R.id.time_tracker_name);
@@ -106,7 +106,7 @@ public class TimeTrackerAdapter extends RecyclerView.Adapter<TimeTrackerAdapter.
                     @Override
                     public void onClick(View view) {
                         timeTrackerNode.delete();
-                        ((MainActivity) context).notifyDataSetChanged();
+                        ((MainActivity) context).notifyItemInsertedOrDeleted();
                     }
                 });
             } else {

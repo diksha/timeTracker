@@ -3,7 +3,6 @@ package com.example.dikshag.timetracker;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -117,5 +116,30 @@ public class MainActivity extends AppCompatActivity {
 
     public void notifyCurrentItemChanged(TimeTrackerNode timeTrackerNode) {
         mAdapter.notifyItemChanged(timeTrackerNodes.indexOf(timeTrackerNode));
+    }
+
+    public void notifyItemInsertedOrDeleted() {
+        List<TimeTrackerNode> newTimeTrackerNodes = TimeTrackerNodesUtil.getTimeTrackerRecords
+                (rootTimeTrackerNode);
+        mAdapter.dataSetChanged(newTimeTrackerNodes);
+        int newPosition = 0;
+        if (newTimeTrackerNodes.size() > timeTrackerNodes.size()) {
+            // itemInserted
+            while (newPosition < timeTrackerNodes.size() && newTimeTrackerNodes.get(newPosition)
+                    == timeTrackerNodes.get(newPosition)) {
+                newPosition++;
+            }
+            mAdapter.notifyItemRangeInserted(newPosition, newTimeTrackerNodes.size() -
+                    timeTrackerNodes.size());
+        } else {
+            // itemDeleted
+            while (newPosition < newTimeTrackerNodes.size() && newTimeTrackerNodes.get
+                    (newPosition) == timeTrackerNodes.get(newPosition)) {
+                newPosition++;
+            }
+            mAdapter.notifyItemRangeRemoved(newPosition, timeTrackerNodes.size() -
+                    newTimeTrackerNodes.size());
+        }
+        this.timeTrackerNodes = newTimeTrackerNodes;
     }
 }

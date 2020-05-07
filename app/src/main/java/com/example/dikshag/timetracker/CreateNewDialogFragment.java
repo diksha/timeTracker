@@ -49,7 +49,7 @@ public class CreateNewDialogFragment extends AppCompatDialogFragment {
             return;
          }
         timeTrackerNode.addChild(new TimeTrackerNode(timeTrackerNode, trackername));
-        ((MainActivity)this.getActivity()).notifyDataSetChanged();
+        ((MainActivity)this.getActivity()).notifyItemInsertedOrDeleted();
         dismiss();
     }
 
